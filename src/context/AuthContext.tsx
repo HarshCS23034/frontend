@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+﻿import React, { createContext, useContext, useState, useEffect } from "react";
 
-// ─── API base (proxied via Vite → http://localhost:5000) ───
-const API = "/api";
+// â”€â”€â”€ API base (proxied via Vite â†’ http://localhost:5000) â”€â”€â”€
+const API_BASE = import.meta.env.VITE_API_URL || "";
+const API = API_BASE ? `${API_BASE}/api` : "/api";
 
 export interface UserProfile {
   id: string;
@@ -71,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  // ─── Restore session from localStorage on mount ───
+  // â”€â”€â”€ Restore session from localStorage on mount â”€â”€â”€
   useEffect(() => {
     const storedToken = localStorage.getItem("learnsync_token");
     const storedUser = localStorage.getItem("learnsync_user");
@@ -85,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  // ─── LOGIN: calls POST /api/auth/login ───
+  // â”€â”€â”€ LOGIN: calls POST /api/auth/login â”€â”€â”€
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     setAuthError(null);
@@ -113,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: backendUser.id,
         name: backendUser.name,
         email: backendUser.email,
-        onboardingComplete: true, // existing user → assume onboarded
+        onboardingComplete: true, // existing user â†’ assume onboarded
       };
 
       // Build profile (restore from localStorage if available, else use defaults)
@@ -149,7 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // ─── SIGNUP: calls POST /api/auth/register, then auto-login ───
+  // â”€â”€â”€ SIGNUP: calls POST /api/auth/register, then auto-login â”€â”€â”€
   const signup = async (name: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     setAuthError(null);
@@ -182,7 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const loginData = await loginRes.json();
 
       if (!loginRes.ok) {
-        // Registration succeeded but login failed — user can manually login
+        // Registration succeeded but login failed â€” user can manually login
         setAuthError("Registered! Please log in manually.");
         setIsLoading(false);
         return false;
@@ -195,7 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: backendUser.id,
         name: backendUser.name,
         email: backendUser.email,
-        onboardingComplete: false, // new user → needs onboarding
+        onboardingComplete: false, // new user â†’ needs onboarding
       };
 
       const newProfile: UserProfile = {
@@ -227,7 +228,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // ─── LOGOUT: clear everything ───
+  // â”€â”€â”€ LOGOUT: clear everything â”€â”€â”€
   const logout = () => {
     setUser(null);
     setProfile(null);
@@ -239,7 +240,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log("[Auth] Logged out");
   };
 
-  // ─── PROFILE UPDATES (local for now) ───
+  // â”€â”€â”€ PROFILE UPDATES (local for now) â”€â”€â”€
   const updateProfile = (data: Partial<UserProfile>) => {
     if (!profile) return;
     const updated = { ...profile, ...data };

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -12,9 +12,10 @@ import {
   Target, BarChart3, Trash2, ArrowUpRight, Activity, Shield,
 } from "lucide-react";
 
-const API = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "";
+const API = API_BASE ? `${API_BASE}/api` : "/api";
 
-// ─── Colors ───
+// â”€â”€â”€ Colors â”€â”€â”€
 const CHART_COLORS = [
   "#00d4ff", "#7c3aed", "#f59e0b", "#22c55e", "#ef4444",
   "#ec4899", "#06b6d4", "#f97316", "#8b5cf6", "#14b8a6",
@@ -31,7 +32,7 @@ const SUBJECT_OPTIONS = [
   "Economics", "Political Science",
 ];
 
-// ─── Types ───
+// â”€â”€â”€ Types â”€â”€â”€
 interface DbSession {
   _id: string;
   title: string;
@@ -68,7 +69,7 @@ interface DashboardData {
   };
 }
 
-// ─── Custom tooltip ───
+// â”€â”€â”€ Custom tooltip â”€â”€â”€
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
@@ -83,7 +84,7 @@ function CustomTooltip({ active, payload, label }: any) {
   );
 }
 
-// ─── Stat Card ───
+// â”€â”€â”€ Stat Card â”€â”€â”€
 function StatCard({ icon: Icon, label, value, sub, color }: {
   icon: any; label: string; value: string | number; sub?: string; color: string;
 }) {
@@ -103,7 +104,7 @@ function StatCard({ icon: Icon, label, value, sub, color }: {
   );
 }
 
-// ─── Add Session Form ───
+// â”€â”€â”€ Add Session Form â”€â”€â”€
 function AddSessionForm({ onClose, onCreated, token }: {
   onClose: () => void; onCreated: (s: DbSession) => void; token: string | null;
 }) {
@@ -169,7 +170,7 @@ function AddSessionForm({ onClose, onCreated, token }: {
             <label className="text-xs text-muted-foreground mb-1 block">Subject *</label>
             <select value={subject} onChange={e => setSubject(e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-muted/30 border border-border text-sm focus:border-cyan/50 focus:outline-none">
-              <option value="">Select…</option>
+              <option value="">Selectâ€¦</option>
               {SUBJECT_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
@@ -189,7 +190,7 @@ function AddSessionForm({ onClose, onCreated, token }: {
               className="w-full px-3 py-2 rounded-lg bg-muted/30 border border-border text-sm focus:border-cyan/50 focus:outline-none" />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Difficulty (1–10): <span className="font-bold" style={{ color: DIFF_COLOR_MAP[String(difficulty)] }}>{difficulty}</span></label>
+            <label className="text-xs text-muted-foreground mb-1 block">Difficulty (1â€“10): <span className="font-bold" style={{ color: DIFF_COLOR_MAP[String(difficulty)] }}>{difficulty}</span></label>
             <input type="range" min="1" max="10" value={difficulty} onChange={e => setDifficulty(Number(e.target.value))}
               className="w-full accent-cyan h-2" />
             <div className="flex justify-between text-[9px] text-muted-foreground"><span>Easy</span><span>Hard</span></div>
@@ -201,21 +202,21 @@ function AddSessionForm({ onClose, onCreated, token }: {
           </div>
           <div className="sm:col-span-2">
             <label className="text-xs text-muted-foreground mb-1 block">Notes (optional)</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Any additional notes…" rows={2}
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Any additional notesâ€¦" rows={2}
               className="w-full px-3 py-2 rounded-lg bg-muted/30 border border-border text-sm focus:border-cyan/50 focus:outline-none resize-none" />
           </div>
         </div>
 
         <button type="submit" disabled={saving}
           className="w-full py-2.5 rounded-lg text-sm font-medium transition-all btn-gradient-primary text-black disabled:opacity-50 flex items-center justify-center gap-2">
-          {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</> : <><Plus className="w-4 h-4" /> Save Session</>}
+          {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Savingâ€¦</> : <><Plus className="w-4 h-4" /> Save Session</>}
         </button>
       </form>
     </motion.div>
   );
 }
 
-// ─── Main Planner ───
+// â”€â”€â”€ Main Planner â”€â”€â”€
 export default function Planner() {
   const { token } = useAuth();
   const [showForm, setShowForm] = useState(false);
@@ -242,7 +243,7 @@ export default function Planner() {
   const handleCreated = (s: DbSession) => {
     setSessions(prev => [s, ...prev]);
     setShowForm(false);
-    setSuccessMsg(`✅ "${s.title}" saved!`);
+    setSuccessMsg(`âœ… "${s.title}" saved!`);
     setTimeout(() => setSuccessMsg(""), 3000);
     // Refresh dashboard
     setTimeout(() => fetchData(), 300);
@@ -277,7 +278,7 @@ export default function Planner() {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen gap-2 text-muted-foreground">
-      <Loader2 className="w-5 h-5 animate-spin" /> Loading Planner…
+      <Loader2 className="w-5 h-5 animate-spin" /> Loading Plannerâ€¦
     </div>
   );
 
@@ -293,7 +294,7 @@ export default function Planner() {
             <Calendar className="w-5 h-5 text-cyan" />
             <span className="gradient-text-primary">Study Planner</span>
           </h1>
-          <p className="text-muted-foreground text-xs lg:text-sm">Your real data · dynamic graphs · AI predictions</p>
+          <p className="text-muted-foreground text-xs lg:text-sm">Your real data Â· dynamic graphs Â· AI predictions</p>
         </div>
         <button onClick={() => setShowForm(f => !f)}
           className="px-4 py-2 rounded-lg text-xs font-medium transition-all bg-cyan/20 text-cyan border border-cyan/30 hover:bg-cyan/30 flex items-center gap-1.5">
@@ -317,7 +318,7 @@ export default function Planner() {
         {showForm && <AddSessionForm onClose={() => setShowForm(false)} onCreated={handleCreated} token={token} />}
       </AnimatePresence>
 
-      {/* ─── Stats Row ─── */}
+      {/* â”€â”€â”€ Stats Row â”€â”€â”€ */}
       {d && hasSessions && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <StatCard icon={Clock} label="Total Study Time" value={`${Math.floor(d.totalStudyTime / 60)}h ${d.totalStudyTime % 60}m`} color="#00d4ff" />
@@ -327,7 +328,7 @@ export default function Planner() {
         </div>
       )}
 
-      {/* ─── Charts Grid ─── */}
+      {/* â”€â”€â”€ Charts Grid â”€â”€â”€ */}
       {d && hasSessions && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Daily Hours (Line) */}
@@ -406,7 +407,7 @@ export default function Planner() {
         </div>
       )}
 
-      {/* ─── AI Predictions ─── */}
+      {/* â”€â”€â”€ AI Predictions â”€â”€â”€ */}
       {d && hasSessions && d.predictions && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="space-y-4">
           <h2 className="font-semibold text-sm flex items-center gap-2">
@@ -452,7 +453,7 @@ export default function Planner() {
                 </div>
               </div>
               <p className="text-[10px] text-muted-foreground text-center">
-                Avg {Math.floor(d.avgMinutesPerDay / 60)}h {d.avgMinutesPerDay % 60}m/day · Difficulty {d.avgDifficulty}/10
+                Avg {Math.floor(d.avgMinutesPerDay / 60)}h {d.avgMinutesPerDay % 60}m/day Â· Difficulty {d.avgDifficulty}/10
               </p>
               <p className="text-[10px] text-muted-foreground text-center mt-1">
                 Projected: {d.predictions.expectedWeeklyHours}h/week
@@ -472,7 +473,7 @@ export default function Planner() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium">{item.subject}</p>
                       <p className="text-[10px] text-muted-foreground">{item.reason}</p>
-                      <p className="text-[10px] text-cyan">→ {item.suggestedMinutes}min/day recommended</p>
+                      <p className="text-[10px] text-cyan">â†’ {item.suggestedMinutes}min/day recommended</p>
                     </div>
                   </div>
                 )) : (
@@ -484,7 +485,7 @@ export default function Planner() {
         </motion.div>
       )}
 
-      {/* ─── Sessions List ─── */}
+      {/* â”€â”€â”€ Sessions List â”€â”€â”€ */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="glass-card p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-sm flex items-center gap-2">
@@ -521,10 +522,10 @@ export default function Planner() {
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-medium ${s.completed ? "line-through text-muted-foreground" : ""}`}>{s.title}</p>
                     <p className="text-xs text-muted-foreground">
-                      {s.subject} · {s.startTime}–{s.endTime} · {s.studyMinutes}min ·
+                      {s.subject} Â· {s.startTime}â€“{s.endTime} Â· {s.studyMinutes}min Â·
                       <span style={{ color: DIFF_COLOR_MAP[String(s.estimatedDifficulty)] }}> D{s.estimatedDifficulty}</span>
                     </p>
-                    {s.goals && <p className="text-[10px] text-cyan mt-0.5">🎯 {s.goals}</p>}
+                    {s.goals && <p className="text-[10px] text-cyan mt-0.5">ðŸŽ¯ {s.goals}</p>}
                   </div>
                   {/* Date & delete */}
                   <div className="text-right flex-shrink-0 flex items-center gap-2">

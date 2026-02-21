@@ -1,9 +1,10 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Zap, Eye, EyeOff, Lock, CheckCircle, XCircle } from "lucide-react";
 
-const API = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "";
+const API = API_BASE ? `${API_BASE}/api` : "/api";
 
 export default function ResetPassword() {
   const { token } = useParams<{ token: string }>();

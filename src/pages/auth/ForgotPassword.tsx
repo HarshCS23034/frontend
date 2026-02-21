@@ -1,9 +1,10 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Zap, ArrowLeft, Mail, CheckCircle } from "lucide-react";
 
-const API = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "";
+const API = API_BASE ? `${API_BASE}/api` : "/api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
